@@ -1,4 +1,7 @@
-import unittest
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import unittest, random
 from blackjack import *
 
 class TestCards(unittest.TestCase):
@@ -51,3 +54,60 @@ class TestCards(unittest.TestCase):
         self.assertEqual(gracz.cards, [])
         self.assertEqual(gracz.hit_me, True)
         self.assertEqual(gracz.in_game, True)
+
+    def add_card_to_player(self,player,(cards_ranks)):
+        for rank in cards_ranks:
+            card = Card(rank,random.choice(['spades','hearts','diamonds','clubs']))
+            player.recive_card(card)
+
+    def test_recive_cards(self):
+        player1 = Player()
+        self.add_card_to_player(player1,('1','2','3','4','5','6'))
+        self.assertEqual(player1.cards.__len__(),6)
+
+
+    def add_cards_to_player_and_check_thair_value(self, value, cards_ranks):
+        player1 = Player()
+        self.add_card_to_player(player1,cards_ranks)
+        self.assertEqual(player1.return_cards_value(), value)
+
+    def test_player_return_cards_value(self):
+        self.add_cards_to_player_and_check_thair_value(11, ('1','10'))
+        self.add_cards_to_player_and_check_thair_value(2, ('1', '1'))
+        self.add_cards_to_player_and_check_thair_value(5, ('2', '3'))
+        self.add_cards_to_player_and_check_thair_value(12, ('1', '2','3','6'))
+        self.add_cards_to_player_and_check_thair_value(11, ('1', '10'))
+        self.add_cards_to_player_and_check_thair_value(15, ('A', '4'))
+        self.add_cards_to_player_and_check_thair_value(18, ('J', '8'))
+        self.add_cards_to_player_and_check_thair_value(19, ('10', '9'))
+        self.add_cards_to_player_and_check_thair_value(20, ('Q', 'K'))
+        self.add_cards_to_player_and_check_thair_value(21, ('A', '10'))
+        self.add_cards_to_player_and_check_thair_value(21, ('Q', 'Q','1'))
+        self.add_cards_to_player_and_check_thair_value(21, ('A', '10','10'))
+        self.add_cards_to_player_and_check_thair_value(22, ('A', '10','Q','A'))
+        self.add_cards_to_player_and_check_thair_value(30, ('Q','K','J'))
+
+
+    def test_decorator_user(self):
+        player1 = Player()
+        printer = Printer()
+        self.assertEqual(printer.player_name(player1),'John Doe')
+        card1 = Card('1','hearts')
+        player1.recive_card(card1)
+        self.assertEqual(printer.player_cards(player1), '|  1 ♥  | ')
+        card2 = Card('Q', 'clubs')
+        player1.recive_card(card2)
+        self.assertEqual(printer.player_cards(player1), '|  1 ♥  | |  Q ♣  | ')
+        card2 = Card('10', 'diamonds')
+        player1.recive_card(card2)
+        self.assertEqual(printer.player_cards(player1), '|  1 ♥  | |  Q ♣  | | 10 ♦  | ')
+        player2 = Player('Anna')
+        self.assertEqual(printer.player_name(player2), 'Anna')
+
+
+    def test_add_dummyp_players(self):
+        kasyno = Casino()
+        kasyno.add_dummy_players(3)
+        self.assertEqual(kasyno.players.__len__(), 3)
+        self.assertEqual(kasyno.players[0].name, 'Anna')
+        self.assertEqual(kasyno.players[0].name, 'Bożydar')

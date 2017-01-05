@@ -1,5 +1,6 @@
 import random
 
+''': spades (♠), hearts (♥), diamonds (♦) and clubs (♣)'''
 
 class Gra(object):
     def __init__(self, lista_graczy):

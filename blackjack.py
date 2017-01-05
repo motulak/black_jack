@@ -5,6 +5,17 @@ import random
 
 """ spades (♠), hearts (♥), diamonds (♦) and clubs (♣)"""
 
+class Casino(object):
+
+    def __init__(self):
+        self.players = []
+
+    def add_dummy_players(self,number_of_players):
+        self.dummy_names = ['Anna','Bożydar','Cecylia','Drago','Elżbieta','Felicjan','Grażyna','Hieronim','Irmina','Józef']
+        for x in range(number_of_players):
+            player = Player(self.dummy_names[x])
+            self.players.append(player)
+
 
 class Card(object):
     def __init__(self,rank,suite):
@@ -61,12 +72,53 @@ class Deck(object):
 
 
 class Player(object):
-    def __init__(self,name):
+    def __init__(self,name='John Doe'):
         self.name = name
         self.cards = []
         self.hit_me = True
         self.in_game = True
 
+    def __str__(self):
+        return self.name
+
+
     def recive_card(self,card):
         self.cards.append(card)
+
+    def return_cards_value(self):
+        value = 0
+        for card in self.cards:
+            value += card.return_value()
+
+        if value > 21:
+            for card in self.cards:
+                if card.rank == 'A' and value>21:
+                    value -= 10
+        return value
+
+    def do_i_want_to_recive_card(self):
+        return True
+
+
+class Printer(object):
+
+    def player_name(self,player):
+        return player.name
+
+    def player_cards(self,player):
+        output = ""
+        for card in player.cards:
+            output += str("|{:>3} {}  | ".format(card.rank,self.change_card_suite_string_to_symbol(card)))
+        return output
+
+    def change_card_suite_string_to_symbol(self,card):
+        if card.suite == 'spades':
+            return '♠'
+        elif card.suite == 'hearts':
+            return '♥'
+        elif card.suite == 'diamonds':
+            return '♦'
+        elif card.suite == 'clubs':
+            return '♣'
+
 
