@@ -94,13 +94,13 @@ class TestCards(unittest.TestCase):
         self.assertEqual(printer.player_name(player1),'John Doe')
         card1 = Card('1','hearts')
         player1.recive_card(card1)
-        self.assertEqual(printer.player_cards(player1), '|  1 ♥  | ')
+        self.assertEqual(printer.player_cards(player1), '| 1 ♥ |  ')
         card2 = Card('Q', 'clubs')
         player1.recive_card(card2)
-        self.assertEqual(printer.player_cards(player1), '|  1 ♥  | |  Q ♣  | ')
+        self.assertEqual(printer.player_cards(player1), '| 1 ♥ |  | Q ♣ |  ')
         card2 = Card('10', 'diamonds')
         player1.recive_card(card2)
-        self.assertEqual(printer.player_cards(player1), '|  1 ♥  | |  Q ♣  | | 10 ♦  | ')
+        self.assertEqual(printer.player_cards(player1), '| 1 ♥ |  | Q ♣ |  |10 ♦ |  ')
         player2 = Player('Anna')
         self.assertEqual(printer.player_name(player2), 'Anna')
 
@@ -110,4 +110,39 @@ class TestCards(unittest.TestCase):
         kasyno.add_dummy_players(3)
         self.assertEqual(kasyno.players.__len__(), 3)
         self.assertEqual(kasyno.players[0].name, 'Anna')
-        self.assertEqual(kasyno.players[0].name, 'Bożydar')
+        self.assertEqual(kasyno.players[1].name, 'Bozydar')
+        self.assertEqual(kasyno.players[2].name, 'Cecylia')
+
+
+    def test_flow_of_casino_with_black_jack(self):
+        kasyno = Casino()
+        printer = Printer()
+        kasyno.add_dummy_players(3)
+        self.add_card_to_player(kasyno.players[0], ('1','1'))
+        self.add_card_to_player(kasyno.players[1], ('10', '1'))
+        self.add_card_to_player(kasyno.players[2], ('Q', 'A'))
+        self.assertEqual(kasyno.players[0].cards.__len__(),2)
+        self.assertEqual(kasyno.check_if_black_jack(), True)
+
+
+    def test_flow_of_casino_no_black_jack(self):
+        kasyno = Casino()
+        printer = Printer()
+        kasyno.add_dummy_players(3)
+        self.add_card_to_player(kasyno.players[0], ('1', '1'))
+        self.add_card_to_player(kasyno.players[1], ('10', '1'))
+        self.add_card_to_player(kasyno.players[2], ('Q', 'A','A'))
+        self.assertEqual(kasyno.players[0].cards.__len__(), 2)
+        self.assertEqual(kasyno.check_if_black_jack(), False)
+
+    def test_dealing_to_only_in_play_players(self):
+        def test_flow_of_casino_no_black_jack(self):
+            kasyno = Casino()
+            printer = Printer()
+            kasyno.add_dummy_players(3)
+
+
+
+
+
+
